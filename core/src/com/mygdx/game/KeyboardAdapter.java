@@ -20,7 +20,6 @@ public class KeyboardAdapter extends InputAdapter {
     public boolean keyDown(int keycode) {
         System.out.println(keycode);
         if(keycode == Input.Keys.A ){
-            System.out.println("keyDown");
             this.leftPressed = true;
         }
         if(keycode == Input.Keys.D){
@@ -69,7 +68,6 @@ public class KeyboardAdapter extends InputAdapter {
     public Vector2 getDirection(){
         direction.set(0,0);
         if(this.leftPressed){
-            System.out.println("getDirection");
             this.direction.add(-1,0);
             return this.direction;
         }

@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -29,9 +30,9 @@ public class StageOne implements Screen {
         map = loader.load("stage1.tmx");
         this.renderer = new OrthogonalTiledMapRenderer(map);
         this.camera = new OrthographicCamera();
-        this.viewport = new FitViewport(256,256, this.camera);
+        this.viewport = new FitViewport(208,208, this.camera);
 
-        this.tank = new Tank(0,0);
+        this.tank = new Tank(1,1,(TiledMapTileLayer) map.getLayers().get(0));
 
     }
 

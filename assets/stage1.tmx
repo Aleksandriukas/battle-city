@@ -1,39 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="16" height="16" tilewidth="16" tileheight="16" infinite="0" nextlayerid="5" nextobjectid="39">
- <tileset firstgid="1" source="battle.tsx"/>
- <layer id="1" name="Tile Layer 1" width="16" height="16">
-  <data encoding="base64">
-   AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARAAAAAAAAABEAAAAAAAAAEQAAAAAAAAARAAAAAAAAABEAAAAAAAAAEQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEQAAAAAAAAARAAAAAAAAABEAAAAAAAAAEQAAAAAAAAARAAAAAAAAABEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABEAAAAAAAAAEQAAAAAAAAARAAAAAAAAABEAAAAAAAAAEQAAAAAAAAARAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARAAAAAAAAABEAAAAAAAAAEQAAACoAAAARAAAAAAAAABEAAAAAAAAAEQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEQAAAAAAAAARAAAAAAAAABUAAAAAAAAAFQAAAAAAAAARAAAAAAAAABEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABMAAAAAAAAAEQAAABEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABEAAAARAAAAAAAAABMAAAAAAAAAAAAAAAAAAAAuAAAAAAAAABUAAAAVAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAVAAAAFQAAAAAAAAAuAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARAAAAAAAAABEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABEAAAAAAAAAEQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEQAAAAAAAAARAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARAAAAAAAAABEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABEAAAAAAAAAEQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEQAAAAAAAAARAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARAAAAAAAAABEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABEAAAAAAAAAEQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEQAAAAAAAAARAAAAAAAAABIAAAAVAAAAFAAAAAAAAAARAAAAAAAAABEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAASAAAARgAAABQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==
-  </data>
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="13" height="13" tilewidth="16" tileheight="16" infinite="0" nextlayerid="2" nextobjectid="1">
+ <tileset firstgid="1" source="tiles.tsx"/>
+ <layer id="1" name="Tile Layer 1" width="13" height="13">
+  <data encoding="csv">
+147,147,147,147,147,147,147,147,147,147,147,147,147,
+147,17,147,17,147,17,147,17,147,17,147,17,147,
+147,17,147,17,147,17,147,17,147,17,147,17,147,
+147,17,147,17,147,17,42,17,147,17,147,17,147,
+147,17,147,17,147,17,147,17,147,17,147,17,147,
+147,147,147,147,147,147,147,147,147,147,147,147,147,
+46,147,17,17,147,147,147,147,147,17,17,147,46,
+147,147,147,147,147,17,19,17,147,147,147,147,147,
+147,17,147,17,147,17,17,17,147,17,147,17,147,
+147,17,147,17,147,17,147,17,147,17,147,17,147,
+147,17,147,17,147,147,147,147,147,17,147,17,147,
+147,17,147,17,147,18,17,20,147,17,147,17,147,
+147,147,147,147,147,18,70,20,147,147,147,147,147
+</data>
  </layer>
- <objectgroup id="3" name="bricks">
-  <object id="11" x="16" y="16" width="16" height="16"/>
-  <object id="12" x="16" y="32" width="16" height="16"/>
-  <object id="13" x="16" y="48" width="16" height="16"/>
-  <object id="14" x="16" y="64" width="16" height="16"/>
-  <object id="15" x="16" y="80" width="16" height="16"/>
-  <object id="16" x="48" y="32" width="16" height="16"/>
-  <object id="17" x="48" y="16" width="16" height="16"/>
-  <object id="18" x="80" y="16" width="16" height="16"/>
-  <object id="19" x="48" y="64" width="16" height="16"/>
-  <object id="20" x="48" y="80" width="16" height="16"/>
-  <object id="21" x="48" y="48" width="16" height="16"/>
-  <object id="22" x="80" y="32" width="16" height="16"/>
-  <object id="23" x="80" y="48" width="16" height="16"/>
-  <object id="24" x="80" y="64" width="16" height="16"/>
-  <object id="25" x="112" y="16" width="16" height="16"/>
-  <object id="26" x="112" y="32" width="16" height="16"/>
-  <object id="27" x="112" y="48" width="16" height="16"/>
-  <object id="28" x="144" y="16" width="16" height="16"/>
-  <object id="29" x="112" y="64" width="16" height="16"/>
-  <object id="30" x="144" y="32" width="16" height="16"/>
-  <object id="31" x="144" y="48" width="16" height="16"/>
-  <object id="32" x="176" y="16" width="16" height="16"/>
-  <object id="33" x="144" y="64" width="16" height="16"/>
-  <object id="34" x="176" y="32" width="16" height="16"/>
-  <object id="35" x="176" y="48" width="16" height="16"/>
-  <object id="36" x="176" y="64" width="16" height="16"/>
-  <object id="37" x="176" y="80" width="16" height="16"/>
-  <object id="38" x="144" y="80" width="16" height="16"/>
- </objectgroup>
 </map>
