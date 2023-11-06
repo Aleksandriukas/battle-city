@@ -19,8 +19,7 @@ public class Tank extends Target {
 
     private final Time lastFireTime = new Time(0);
 
-
-    Tank(Float x , Float y, TiledMapTileLayer collisionLayer, List<Bullet> bullets, Boolean isEnemy, Integer health){
+    Tank(Float x , Float y, TiledMapTileLayer collisionLayer ,List<Bullet> bullets, Boolean isEnemy, Integer health){
         super(x,y,collisionLayer,CONSTANTS.TANK_TILE_SIZE, CONSTANTS.TANK_MODEL_SIZE, new Texture(Gdx.files.internal("tiles.png")));
 
         this.bullets = bullets;
@@ -59,7 +58,7 @@ public class Tank extends Target {
 
         this.lastFireTime.setTime(System.currentTimeMillis());
 
-        Bullet bullet = new Bullet(this.tilePosition.x + this.tileSize /2  - CONSTANTS.BULLET_TILE_SIZE/2, this.tilePosition.y + this.tileSize/2 - CONSTANTS.BULLET_TILE_SIZE/2,this.collisionLayer, direction, this.isEnemy);
+        Bullet bullet = new Bullet(this.tilePosition.x + this.tileSize /2  - CONSTANTS.BULLET_TILE_SIZE/2, this.tilePosition.y + this.tileSize/2 - CONSTANTS.BULLET_TILE_SIZE/2,this.collisionLayer ,direction, this.isEnemy);
         this.bullets.add(bullet);
     }
 

@@ -6,6 +6,10 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Vector2;
 
+import java.sql.Time;
+import java.util.Timer;
+import java.util.TimerTask;
+
 public class Target {
     protected Vector2 modelPosition;
 
@@ -15,6 +19,11 @@ public class Target {
     protected TextureRegion region;
     protected Integer tileSize;
     protected Integer modelSize;
+    protected Boolean gameOver = false;
+
+    protected Boolean isExplored = false;
+
+    protected Time explosionStart = new Time(0);
 
     enum Direction{
         UP,
@@ -25,7 +34,8 @@ public class Target {
     protected Direction direction;
     protected Integer speed = 1;
     public final TiledMapTileLayer collisionLayer;
-    Target(Float x , Float y, TiledMapTileLayer collisionLayer, Integer tileSize,Integer modelSize, Texture texture){
+
+    Target(Float x , Float y, TiledMapTileLayer collisionLayer,Integer tileSize,Integer modelSize, Texture texture){
 
         this.direction = Bullet.Direction.UP;
 
@@ -47,6 +57,12 @@ public class Target {
     }
 
     public void render(Batch batch){
+
+        if(gameOver){
+            this.dispose();
+            return;
+        }
+
         batch.draw(this.region, this.tilePosition.x, this.tilePosition.y);
     }
 
@@ -96,6 +112,8 @@ public class Target {
     }
 
     public boolean canMoveUp(){
+
+
         if(modelPosition.y == 240-16){
             return false;
         }
@@ -163,6 +181,9 @@ public class Target {
     }
 
     public boolean canMove (){
+        if(this.isExplored){
+            return false;
+        }
         if(this.direction == Bullet.Direction.UP){
             return this.canMoveUp();
         }
@@ -180,4 +201,22 @@ public class Target {
         }
         return true;
     }
+
+    public void explore(){
+
+        this.isExplored = true;
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                gameOver = true;
+            }
+        }, 200);
+        this.region.setRegion(256,128, 16,16);
+    }
+
+    public boolean isGameOver(){
+        return this.gameOver;
+    }
+
 }

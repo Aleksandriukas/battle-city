@@ -51,10 +51,7 @@ public class StageOne implements Screen {
 
         this.renderer.getBatch().begin();
 
-
-
         this.tank.moveTo(this.keyboardAdapter.getDirection());
-
 
         if(this.keyboardAdapter.isFirePressed()){
             this.tank.fire();
@@ -63,7 +60,14 @@ public class StageOne implements Screen {
         this.tank.render(this.renderer.getBatch());
 
         for(Bullet bullet : this.bullets){
+            bullet.setTextureLayer((TiledMapTileLayer) this.map.getLayers().get(1));
             bullet.render(this.renderer.getBatch());
+        }
+
+        for(int i =0 ; i< this.bullets.size();i++){
+            if(this.bullets.get(i).isGameOver()){
+                this.bullets.remove(i);
+            }
         }
 
         this.renderer.getBatch().end();
