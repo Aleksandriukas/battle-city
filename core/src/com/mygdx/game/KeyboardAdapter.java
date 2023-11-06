@@ -18,7 +18,6 @@ public class KeyboardAdapter extends InputAdapter {
 
     @Override
     public boolean keyDown(int keycode) {
-        System.out.println(keycode);
         if(keycode == Input.Keys.A ){
             this.leftPressed = true;
         }

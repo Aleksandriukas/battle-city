@@ -10,6 +10,9 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class StageOne implements Screen {
     private TiledMap map;
     private OrthogonalTiledMapRenderer renderer;
@@ -19,6 +22,8 @@ public class StageOne implements Screen {
     private Viewport viewport;
 
     private Tank tank;
+
+    private List<Bullet> bullets;
 
     private KeyboardAdapter keyboardAdapter;
     @Override
@@ -30,21 +35,23 @@ public class StageOne implements Screen {
         map = loader.load("stage1.tmx");
         this.renderer = new OrthogonalTiledMapRenderer(map);
         this.camera = new OrthographicCamera();
-        this.viewport = new FitViewport(208,208, this.camera);
-
-        this.tank = new Tank(1,1,(TiledMapTileLayer) map.getLayers().get(0));
+        this.viewport = new FitViewport(320,240, this.camera);
+        this.bullets = new ArrayList<>();
+        this.tank = new Tank(16F, 16F,(TiledMapTileLayer) map.getLayers().get(0), bullets, false, 1);
 
     }
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0,0,0,1);
+        Gdx.gl.glClearColor(0,0,0,0);
         Gdx.gl.glClear(Gdx.gl.GL_COLOR_BUFFER_BIT);
 
         this.renderer.setView(this.camera);
         this.renderer.render();
 
         this.renderer.getBatch().begin();
+
+
 
         this.tank.moveTo(this.keyboardAdapter.getDirection());
 
@@ -54,6 +61,10 @@ public class StageOne implements Screen {
         }
 
         this.tank.render(this.renderer.getBatch());
+
+        for(Bullet bullet : this.bullets){
+            bullet.render(this.renderer.getBatch());
+        }
 
         this.renderer.getBatch().end();
     }
