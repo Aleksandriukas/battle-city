@@ -27,7 +27,7 @@ public class Bullet extends Target {
 
         this.isEnemy = isEnemy;
 
-        this.setSpeed(2);
+        this.setSpeed(2F);
 
         this.setRegion();
     }
@@ -234,6 +234,5 @@ public class Bullet extends Target {
 
         return !(downTileBlocked || upTileBlocked);
     }
-
 }
 

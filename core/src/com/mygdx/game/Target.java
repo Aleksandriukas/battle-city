@@ -32,7 +32,7 @@ public class Target {
         RIGHT
     }
     protected Direction direction;
-    protected Integer speed = 1;
+    protected Float speed = 1F;
     public final TiledMapTileLayer collisionLayer;
 
     Target(Float x , Float y, TiledMapTileLayer collisionLayer,Integer tileSize,Integer modelSize, Texture texture){
@@ -43,11 +43,7 @@ public class Target {
 
         this.tileSize = tileSize;
 
-        this.tilePosition = new Vector2(x,y);
-
-        Integer modelOffset = (tileSize - modelSize)/2;
-
-        this.modelPosition = new Vector2(x+ modelOffset ,y + modelOffset);
+        teleport(new Vector2(x,y));
 
         this.texture = texture;
 
@@ -70,7 +66,7 @@ public class Target {
         this.texture.dispose();
     }
 
-    public void setSpeed(Integer speed){
+    public void setSpeed(Float speed){
         this.speed = speed;
     }
 
@@ -202,6 +198,16 @@ public class Target {
         return true;
     }
 
+    public void teleport(Vector2 position){
+
+
+        this.tilePosition = new Vector2(position);
+
+        Integer modelOffset = (tileSize - modelSize)/2;
+
+        this.modelPosition = new Vector2(position.x + modelOffset, position.y + modelOffset);
+    }
+
     public void explore(){
 
         this.isExplored = true;
@@ -217,6 +223,14 @@ public class Target {
 
     public boolean isGameOver(){
         return this.gameOver;
+    }
+
+
+    public boolean isIntersected(Target target){
+        return this.modelPosition.x < target.modelPosition.x + target.modelSize &&
+                this.modelPosition.x + this.modelSize > target.modelPosition.x &&
+                this.modelPosition.y < target.modelPosition.y + target.modelSize &&
+                this.modelPosition.y + this.modelSize > target.modelPosition.y;
     }
 
 }
