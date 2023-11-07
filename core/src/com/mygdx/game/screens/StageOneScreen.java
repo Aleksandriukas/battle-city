@@ -1,7 +1,7 @@
-package com.mygdx.game;
+package com.mygdx.game.screens;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
@@ -9,29 +9,31 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
+import com.mygdx.game.*;
+import com.mygdx.game.targets.Base;
+import com.mygdx.game.targets.Bullet;
+import com.mygdx.game.targets.tanks.Enemy;
+import com.mygdx.game.targets.tanks.MainCharacter;
 
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StageOne implements Screen {
+public class StageOneScreen extends ScreenBase {
     private TiledMap map;
     private OrthogonalTiledMapRenderer renderer;
-
-    private OrthographicCamera camera;
-
-    private Viewport viewport;
-
-    private Tank tank;
-
+    private MainCharacter tank;
     private List<Bullet> bullets;
-
+    private Stat text;
+    private Base base;
     private List<Enemy> enemies;
-
     private Integer MAX_ENEMIES = 20;
+    private Integer score = 0;
+    public StageOneScreen(Game parent){
+        super(parent);
+        this.parent = parent;
+    }
 
-    private KeyboardAdapter keyboardAdapter;
     @Override
     public void show() {
 
@@ -41,11 +43,12 @@ public class StageOne implements Screen {
         map = loader.load("stage1.tmx");
         this.renderer = new OrthogonalTiledMapRenderer(map);
         this.camera = new OrthographicCamera();
-        this.viewport = new FitViewport(320,240, this.camera);
+        this.viewport = new FitViewport(CONSTANTS.SCREEN_WIDTH,CONSTANTS.SCREEN_HEIGHT, this.camera);
         this.bullets = new ArrayList<>();
         this.tank = new MainCharacter(16F, 16F,(TiledMapTileLayer) map.getLayers().get(0), bullets, false, 1);
         this.enemies = new ArrayList<>();
-        this.enemies.add(new Enemy(16F, 208F,(TiledMapTileLayer) map.getLayers().get(0), bullets));
+        this.base = new Base(112F,16F,(TiledMapTileLayer) map.getLayers().get(0),16,16);
+        this.text = new Stat("text",this.renderer.getBatch(),viewport);
     }
 
     @Override
@@ -55,43 +58,49 @@ public class StageOne implements Screen {
 
         this.renderer.setView(this.camera);
         this.renderer.render();
+        this.text.update(this.MAX_ENEMIES + this.enemies.size(), this.score, this.tank.lives);
+        this.text.render(this.renderer.getBatch());
 
         this.renderer.getBatch().begin();
+            this.tank.moveTo(this.keyboardAdapter.getDirection());
 
-        this.tank.moveTo(this.keyboardAdapter.getDirection());
-
-        if(this.MAX_ENEMIES !=0) {
-            generateEnemy();
-        }
-        if(this.keyboardAdapter.isFirePressed()){
-            this.tank.fire();
-        }
-
-        this.tank.render(this.renderer.getBatch());
-
-        for(Bullet bullet : this.bullets){
-            bullet.setTextureLayer((TiledMapTileLayer) this.map.getLayers().get(1));
-            bullet.render(this.renderer.getBatch());
-        }
-
-        for(int i =0 ; i< this.bullets.size();i++){
-            if(this.bullets.get(i).isGameOver()){
-                this.bullets.remove(i);
+            if (this.MAX_ENEMIES != 0) {
+                generateEnemy();
             }
-        }
-
-        for(Enemy enemy : this.enemies){
-            enemy.render(this.renderer.getBatch());
-        }
-
-        for(int i =0 ; i< this.enemies.size();i++){
-            if(this.enemies.get(i).isGameOver()){
-                this.enemies.remove(i);
+            if (this.keyboardAdapter.isFirePressed()) {
+                this.tank.fire();
             }
+
+            this.tank.render(this.renderer.getBatch());
+
+            for (Bullet bullet : this.bullets) {
+                bullet.setTextureLayer((TiledMapTileLayer) this.map.getLayers().get(1));
+                bullet.render(this.renderer.getBatch());
+            }
+
+            for (int i = 0; i < this.bullets.size(); i++) {
+                if (this.bullets.get(i).gameOver) {
+                    this.bullets.remove(i);
+                }
+            }
+
+            for (Enemy enemy : this.enemies) {
+                enemy.render(this.renderer.getBatch());
+            }
+
+            for (int i = 0; i < this.enemies.size(); i++) {
+                if (this.enemies.get(i).gameOver) {
+                    this.score += this.enemies.get(i).getScore();
+                    this.enemies.remove(i);
+                }
+            }
+            this.base.render(this.renderer.getBatch());
+            this.renderer.getBatch().end();
+            interactCharacters();
+            if(this.tank.gameOver){
+                 this.parent.setScreen(new GameOverScreen(this.parent,this.score));
         }
 
-        interactCharacters();
-        this.renderer.getBatch().end();
     }
 
     public int generateRandomNumber(int min, int max){
@@ -100,29 +109,45 @@ public class StageOne implements Screen {
 
     private Time lastEnemyGenerateTime = new Time(0);
     public void generateEnemy(){
-        if(this.lastEnemyGenerateTime.getTime() + 10000 < System.currentTimeMillis()){
+        if(this.lastEnemyGenerateTime.getTime() + 7000 < System.currentTimeMillis()){
 
             MAX_ENEMIES--;
-            int number = generateRandomNumber(1,4);
+            int positionNumber = generateRandomNumber(1,4);
+            int typeNumber = generateRandomNumber(1,5);
+
+            Enemy.TankType type;
+            if(typeNumber == 4){
+                type = Enemy.TankType.FAST;
+            }
+            else{
+                type = Enemy.TankType.BASIC;
+            }
+
             Vector2 position = new Vector2(16F, 208F);
 
-            if(number == 1){
+            if(positionNumber == 1){
                 position.set(16F, 208F);
             }
-            if(number == 2){
+            if(positionNumber == 2){
                 position.set(156F, 208F);
             }
-            if(number == 3){
+            if(positionNumber == 3){
                 position.set(208F, 208F);
             }
 
             this.lastEnemyGenerateTime = new Time(System.currentTimeMillis());
-            this.enemies.add(new Enemy(position.x,position.y,(TiledMapTileLayer) map.getLayers().get(0), bullets));
+            this.enemies.add(new Enemy(position.x,position.y,(TiledMapTileLayer) map.getLayers().get(0), bullets, type));
         }
     }
 
     public void interactCharacters(){
         for(Enemy enemy : this.enemies){
+
+            if(enemy.isIntersected(this.base)){
+                this.base.explore();
+                this.tank.gameOver = true;
+            }
+
             for(Bullet bullet : this.bullets){
                 if(enemy.isIntersected(bullet) && !bullet.isEnemy()){
                     enemy.explore();
@@ -146,34 +171,11 @@ public class StageOne implements Screen {
                 }
             }
         }
-
-
-
-    }
-
-    @Override
-    public void resize(int width, int height) {
-        viewport.update(width, height,true);
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-
     }
 
     @Override
     public void dispose() {
         this.map.dispose();
         this.renderer.dispose();
-    }
-
-    @Override
-    public void hide(){
-        this.dispose();
     }
 }

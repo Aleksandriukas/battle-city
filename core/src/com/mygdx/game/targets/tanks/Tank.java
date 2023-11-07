@@ -1,11 +1,12 @@
-package com.mygdx.game;
+package com.mygdx.game.targets.tanks;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Vector2;
+import com.mygdx.game.CONSTANTS;
+import com.mygdx.game.targets.Bullet;
+import com.mygdx.game.targets.Target;
 
 import java.sql.Time;
 import java.util.List;
@@ -25,7 +26,7 @@ public class Tank extends Target {
     private Integer timeout = 1000;
 
     Tank(Float x , Float y, TiledMapTileLayer collisionLayer ,List<Bullet> bullets, Boolean isEnemy, Integer health, Vector2 texturePosition){
-        super(x,y,collisionLayer,CONSTANTS.TANK_TILE_SIZE, CONSTANTS.TANK_MODEL_SIZE, new Texture(Gdx.files.internal("tiles.png")));
+        super(x,y,collisionLayer, CONSTANTS.TANK_TILE_SIZE, CONSTANTS.TANK_MODEL_SIZE);
 
         this.texturePosition = texturePosition;
 
@@ -51,16 +52,16 @@ public class Tank extends Target {
             return;
         }
 
-        if(this.direction == Bullet.Direction.UP){
+        if(this.direction == Direction.UP){
             this.region = new TextureRegion(this.texture, (int)(this.texturePosition.x+ 0), (int)(this.texturePosition.y + 0),CONSTANTS.TILE_SIZE,CONSTANTS.TILE_SIZE);
         }
-        if(this.direction == Bullet.Direction.DOWN){
+        if(this.direction == Direction.DOWN){
             this.region = new TextureRegion(this.texture, (int)(this.texturePosition.x +64),(int)(this.texturePosition.y+ 0),CONSTANTS.TILE_SIZE,CONSTANTS.TILE_SIZE);
         }
-        if(this.direction == Bullet.Direction.LEFT){
+        if(this.direction == Direction.LEFT){
             this.region = new TextureRegion(this.texture,  (int)(this.texturePosition.x+ 32),(int)(this.texturePosition.y+ 0),CONSTANTS.TILE_SIZE,CONSTANTS.TILE_SIZE);
         }
-        if(this.direction == Bullet.Direction.RIGHT){
+        if(this.direction == Direction.RIGHT){
             this.region = new TextureRegion(this.texture, (int)(this.texturePosition.x+ 96),(int)(this.texturePosition.y + 0) ,CONSTANTS.TILE_SIZE,CONSTANTS.TILE_SIZE);
         }
     }
