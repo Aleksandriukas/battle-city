@@ -6,6 +6,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.mygdx.game.CONSTANTS;
 import com.mygdx.game.KeyboardAdapter;
 
 public class ScreenBase implements Screen {
@@ -16,7 +17,7 @@ public class ScreenBase implements Screen {
     ScreenBase(Game parent){
         this.parent =parent;
         this.camera = new OrthographicCamera();
-        viewport = new FitViewport(320,240, camera);
+        viewport = new FitViewport(CONSTANTS.SCREEN_WIDTH,CONSTANTS.SCREEN_HEIGHT, camera);
     }
     @Override
     public void show() {
@@ -40,7 +41,6 @@ public class ScreenBase implements Screen {
     public void resume() {
 
     }
-
     @Override
     public void hide(){
         this.dispose();

@@ -13,7 +13,7 @@ public class GameOverScreen extends ScreenBase {
     private Stage stage;
     private SpriteBatch batch;
 
-    GameOverScreen(Game parent, int score){
+    GameOverScreen(Game parent, int score, boolean isWin){
         super(parent);
         batch = new SpriteBatch();
         stage = new Stage(viewport, batch);
@@ -24,7 +24,7 @@ public class GameOverScreen extends ScreenBase {
 
         Label.LabelStyle font = new Label.LabelStyle(new Label.LabelStyle(new BitmapFont(), Color.WHITE));
 
-        Label gameOverLabel = new Label("GAME OVER",font);
+        Label gameOverLabel = new Label(isWin? "You win": "You lose",font);
         Label playAgainLabel = new Label("Press enter to play again",font);
         Label yourScore = new Label("Your score: " + score,font);
         table.add(gameOverLabel).expandX();

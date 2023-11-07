@@ -3,13 +3,13 @@ package com.mygdx.game.targets;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.CONSTANTS;
+import com.mygdx.game.CustomTextureRegion;
+import com.mygdx.game.Direction;
 
-import java.sql.Time;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -17,30 +17,24 @@ public class Target {
     protected Vector2 modelPosition;
     protected Vector2 tilePosition;
     protected Texture texture;
-    protected TextureRegion region;
+    protected CustomTextureRegion region;
     protected Integer tileSize;
     protected Integer modelSize;
     public Boolean gameOver = false;
     protected Boolean isExplored = false;
-    protected Time explosionStart = new Time(0);
-    protected enum Direction{
-        UP,
-        DOWN,
-        LEFT,
-        RIGHT
-    }
+    private int exploreTime = 200;
     protected Direction direction;
     protected Float speed = 1F;
     public final TiledMapTileLayer collisionLayer;
 
-    protected Target(Float x, Float y, TiledMapTileLayer collisionLayer, Integer tileSize, Integer modelSize){
+    protected Target(Float x, Float y, TiledMapTileLayer collisionLayer,Integer tileSize, Integer modelSize, Vector2 texturePosition, int nextTileCoordinates){
 
-        this.direction = Bullet.Direction.UP;
+        this.direction = Direction.UP;
         this.modelSize = modelSize;
         this.tileSize = tileSize;
         teleport(new Vector2(x,y));
         this.texture = new Texture(Gdx.files.internal("tiles.png"));
-        this.region = new TextureRegion(this.texture, 0,0,tileSize,tileSize);
+        this.region = new CustomTextureRegion(this.texture, texturePosition,tileSize, nextTileCoordinates);
         this.collisionLayer = collisionLayer;
     }
 
@@ -49,8 +43,7 @@ public class Target {
             this.dispose();
             return;
         }
-
-        batch.draw(this.region, this.tilePosition.x, this.tilePosition.y);
+        batch.draw(this.region.getRegion(), this.tilePosition.x, this.tilePosition.y);
     }
 
     public void dispose(){
@@ -63,16 +56,16 @@ public class Target {
 
     public void moveTo (Vector2 direction){
         if(direction.x == 1){
-            this.direction = Bullet.Direction.RIGHT;
+            this.direction = Direction.RIGHT;
         }
         if(direction.x == -1){
-            this.direction = Bullet.Direction.LEFT;
+            this.direction = Direction.LEFT;
         }
         if(direction.y == 1){
-            this.direction = Bullet.Direction.UP;
+            this.direction = Direction.UP;
         }
         if(direction.y == -1){
-            this.direction = Bullet.Direction.DOWN;
+            this.direction = Direction.DOWN;
         }
         if(canMove()) {
             this.modelPosition.add(new Vector2(direction.x* speed, direction.y * speed));
@@ -96,34 +89,18 @@ public class Target {
     }
 
     public boolean canMoveUp(){
-        if(modelPosition.y == 240-16){
-            return false;
-        }
-
         return !(this.getUpTilesProperties()[0].containsKey("blocked") || this.getUpTilesProperties()[1].containsKey("blocked"));
     }
 
     public boolean canMoveDown(){
-        if(modelPosition.y == 0){
-            return false;
-        }
-
         return !(this.getDownTilesProperties()[0].containsKey("blocked") || this.getDownTilesProperties()[1].containsKey("blocked"));
     }
 
     public boolean canMoveLeft(){
-        if(modelPosition.x == 0){
-            return false;
-        }
-
         return !(this.getLeftTilesProperties()[0].containsKey("blocked") || this.getLeftTilesProperties()[1].containsKey("blocked"));
     }
 
     public boolean canMoveRight(){
-        if(modelPosition.x == 240-16){
-            return false;
-        }
-
         return !(this.getRightTilesProperties()[0].containsKey("blocked") || this.getRightTilesProperties()[1].containsKey("blocked") );
     }
 
@@ -167,19 +144,19 @@ public class Target {
         if(this.isExplored){
             return false;
         }
-        if(this.direction == Bullet.Direction.UP){
+        if(this.direction == Direction.UP){
             return this.canMoveUp();
         }
 
-        if(this.direction == Bullet.Direction.DOWN){
+        if(this.direction == Direction.DOWN){
             return this.canMoveDown();
         }
 
-        if(this.direction == Bullet.Direction.LEFT){
+        if(this.direction == Direction.LEFT){
             return this.canMoveLeft();
         }
 
-        if(this.direction == Bullet.Direction.RIGHT){
+        if(this.direction == Direction.RIGHT){
             return this.canMoveRight();
         }
         return true;
@@ -203,8 +180,8 @@ public class Target {
             public void run() {
                 gameOver = true;
             }
-        }, 200);
-        this.region.setRegion(256,128, 16,16);
+        }, exploreTime);
+        this.region.changeTexture(new Vector2(CONSTANTS.EXPLORE_TILE[0],CONSTANTS.EXPLORE_TILE[1]), CONSTANTS.TILE_SIZE);
     }
 
     public boolean isIntersected(Target target){

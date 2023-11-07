@@ -15,11 +15,14 @@ public class Stat {
     private Table table;
     private Label.LabelStyle font;
 
+    private int MARGIN_LEFT = 24;
+    private int MARGIN_TOP = 48;
+
      public Stat(String text, Batch batch, Viewport viewport){
          stage = new Stage(viewport, batch);
 
          table = new Table();
-         table.setPosition(280,200);
+         table.setPosition(CONSTANTS.MAP_SIZE + MARGIN_LEFT,CONSTANTS.SCREEN_HEIGHT - MARGIN_TOP);
          font = new Label.LabelStyle(new Label.LabelStyle(new BitmapFont(), Color.WHITE));
      }
         public void render(Batch batch){

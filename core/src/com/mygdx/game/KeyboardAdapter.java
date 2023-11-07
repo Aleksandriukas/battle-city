@@ -5,8 +5,6 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.math.Vector2;
 
 public class KeyboardAdapter extends InputAdapter {
-
-
     private boolean leftPressed;
     private boolean rightPressed;
     private boolean upPressed;

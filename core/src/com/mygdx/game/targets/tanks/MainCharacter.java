@@ -10,15 +10,13 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class MainCharacter extends Tank {
-
     public Integer lives = 1;
-
     private Vector2 defaultPosition;
-
     private Boolean immortal = false;
+    private int RESPAWN_TIME = 200;
 
-    public MainCharacter(Float x, Float y, TiledMapTileLayer collisionLayer, List<Bullet> bullets, Boolean isEnemy, Integer health) {
-        super(x, y, collisionLayer, bullets, isEnemy, health, new Vector2(0,0));
+    public MainCharacter(Float x, Float y, TiledMapTileLayer collisionLayer, List<Bullet> bullets, Boolean isEnemy ) {
+        super(x, y, collisionLayer, bullets, isEnemy,  new Vector2(CONSTANTS.BASIC_TANK_TILE[0],CONSTANTS.BASIC_TANK_TILE[1]));
         defaultPosition = new Vector2(x,y);
     }
 
@@ -40,11 +38,10 @@ public class MainCharacter extends Tank {
                     revive();
                     return;
                 }
-                    System.out.println("Game over");
                     gameOver = true;
             }
-        }, 200);
-        this.region.setRegion(256,128, CONSTANTS.TANK_TILE_SIZE,CONSTANTS.TANK_TILE_SIZE);
+        }, RESPAWN_TIME);
+        this.region.changeTexture(new Vector2( CONSTANTS.EXPLORE_TILE[0],CONSTANTS.EXPLORE_TILE[1]), CONSTANTS.TILE_SIZE);
     }
 
     public void revive(){
@@ -55,7 +52,8 @@ public class MainCharacter extends Tank {
             public void run() {
                 immortal = false;
             }
-        }, 200);
+        }, RESPAWN_TIME);
+        this.region.changeTexture(CONSTANTS.BASIC_TANK_TILE[0], CONSTANTS.BASIC_TANK_TILE[1], CONSTANTS.TILE_SIZE);
         teleport(defaultPosition);
 
     }

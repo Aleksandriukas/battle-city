@@ -1,8 +1,11 @@
 package com.mygdx.game.targets.tanks;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Vector2;
+import com.mygdx.game.CONSTANTS;
+import com.mygdx.game.Utils;
 import com.mygdx.game.targets.Bullet;
 import com.mygdx.game.targets.tanks.Tank;
 
@@ -12,7 +15,7 @@ import java.util.List;
 public class Enemy extends Tank {
 
     public enum TankType {
-        BASIC, FAST, ARMOR
+        BASIC, FAST
     }
 
     private TankType type;
@@ -20,11 +23,17 @@ public class Enemy extends Tank {
     private int score;
 
     private Time lastActionTime = new Time(0);
+    private final float[] SPEEDS= new float[]{0.5F, 1F};
+
+    private final int[] SCORES = new int[]{100, 200};
+
+    private final int[] TIMEOUTS = new int[]{1500, 1000};
 
     private Vector2 generatedWay = new Vector2();
 
+
     public Enemy(Float x, Float y, TiledMapTileLayer collisionLayer, List<Bullet> bullets, TankType enemyType) {
-        super(x,y,collisionLayer,bullets,true,1 ,new Vector2(128,0));
+        super(x,y,collisionLayer,bullets,true, new Vector2(CONSTANTS.BASIC_ENEMY_TILE[0],CONSTANTS.BASIC_ENEMY_TILE[1]));
         configEnemy(enemyType);
     }
 
@@ -40,28 +49,18 @@ public class Enemy extends Tank {
 
    public void configEnemy(TankType enemyType){
        if(enemyType == TankType.BASIC){
-           setSpeed(0.5F);
-           setTimeout(1500);
-           this.score = 100;
-           this.texturePosition.set(128,0);
+           setSpeed(SPEEDS[0]);
+           setTimeout(TIMEOUTS[0]);
+           this.score = SCORES[0];
+           this.region.changeTexture(new Vector2(CONSTANTS.BASIC_ENEMY_TILE[0], CONSTANTS.BASIC_ENEMY_TILE[1]), CONSTANTS.TANK_TILE_SIZE);
        }
        if(enemyType == TankType.FAST){
-           setSpeed(1F);
-           setTimeout(1000);
-           this.score = 200;
-           this.texturePosition.set(128,80);
-       }
-       if(enemyType == TankType.ARMOR){
-           setSpeed(0.25F);
-           setTimeout(2000);
-           this.score = 300;
-           this.texturePosition.set(128,32);
+           setSpeed(SPEEDS[1]);
+           setTimeout(TIMEOUTS[1]);
+           this.score = SCORES[1];
+           this.region.changeTexture(new Vector2(CONSTANTS.FAST_ENEMY_TILE[0], CONSTANTS.FAST_ENEMY_TILE[1]), CONSTANTS.TANK_TILE_SIZE);
        }
    }
-
-    public int getRandomNumber(int min, int max) {
-        return (int) ((Math.random() * (max - min)) + min);
-    }
 
     public void emulateMove(){
         this.generateWay();
@@ -69,10 +68,12 @@ public class Enemy extends Tank {
     }
 
    public void generateWay(){
-        if(this.lastActionTime.getTime() + 2000 < System.currentTimeMillis()){
+       int ACTION_TIMEOUT = 2000;
+
+       if(this.lastActionTime.getTime() + ACTION_TIMEOUT < System.currentTimeMillis()){
             this.lastActionTime = new Time(System.currentTimeMillis());
 
-            int number = this.getRandomNumber(1,5);
+            int number = Utils.random(1,5);
             if(number == 1){
                 this.generatedWay = new Vector2(0,1);
             }

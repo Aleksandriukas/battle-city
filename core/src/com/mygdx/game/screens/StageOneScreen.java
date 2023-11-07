@@ -27,8 +27,15 @@ public class StageOneScreen extends ScreenBase {
     private Stat text;
     private Base base;
     private List<Enemy> enemies;
-    private Integer MAX_ENEMIES = 20;
+    private Integer enemiesCount = 20;
     private Integer score = 0;
+    private Vector2[] enemiesPositions = new Vector2[]{
+            new Vector2(16F, 208F),
+            new Vector2(156F, 208F),
+            new Vector2(208F, 208F)
+    };
+    private Vector2 basePosition = new Vector2(112F,16F);
+    private Vector2 mainCharacterPosition = new Vector2(80F, 16F);
     public StageOneScreen(Game parent){
         super(parent);
         this.parent = parent;
@@ -45,9 +52,9 @@ public class StageOneScreen extends ScreenBase {
         this.camera = new OrthographicCamera();
         this.viewport = new FitViewport(CONSTANTS.SCREEN_WIDTH,CONSTANTS.SCREEN_HEIGHT, this.camera);
         this.bullets = new ArrayList<>();
-        this.tank = new MainCharacter(16F, 16F,(TiledMapTileLayer) map.getLayers().get(0), bullets, false, 1);
+        this.tank = new MainCharacter(mainCharacterPosition.x, mainCharacterPosition.y ,(TiledMapTileLayer) map.getLayers().get(0), bullets, false);
         this.enemies = new ArrayList<>();
-        this.base = new Base(112F,16F,(TiledMapTileLayer) map.getLayers().get(0),16,16);
+        this.base = new Base(basePosition.x, basePosition.y, (TiledMapTileLayer) map.getLayers().get(0),CONSTANTS.TILE_SIZE,CONSTANTS.TILE_SIZE);
         this.text = new Stat("text",this.renderer.getBatch(),viewport);
     }
 
@@ -58,19 +65,12 @@ public class StageOneScreen extends ScreenBase {
 
         this.renderer.setView(this.camera);
         this.renderer.render();
-        this.text.update(this.MAX_ENEMIES + this.enemies.size(), this.score, this.tank.lives);
+        this.text.update(this.enemiesCount + this.enemies.size(), this.score, this.tank.lives);
+
+        this.updateTargets();
         this.text.render(this.renderer.getBatch());
 
         this.renderer.getBatch().begin();
-            this.tank.moveTo(this.keyboardAdapter.getDirection());
-
-            if (this.MAX_ENEMIES != 0) {
-                generateEnemy();
-            }
-            if (this.keyboardAdapter.isFirePressed()) {
-                this.tank.fire();
-            }
-
             this.tank.render(this.renderer.getBatch());
 
             for (Bullet bullet : this.bullets) {
@@ -78,42 +78,52 @@ public class StageOneScreen extends ScreenBase {
                 bullet.render(this.renderer.getBatch());
             }
 
-            for (int i = 0; i < this.bullets.size(); i++) {
-                if (this.bullets.get(i).gameOver) {
-                    this.bullets.remove(i);
-                }
-            }
-
             for (Enemy enemy : this.enemies) {
                 enemy.render(this.renderer.getBatch());
             }
-
-            for (int i = 0; i < this.enemies.size(); i++) {
-                if (this.enemies.get(i).gameOver) {
-                    this.score += this.enemies.get(i).getScore();
-                    this.enemies.remove(i);
-                }
-            }
             this.base.render(this.renderer.getBatch());
             this.renderer.getBatch().end();
-            interactCharacters();
-            if(this.tank.gameOver){
-                 this.parent.setScreen(new GameOverScreen(this.parent,this.score));
-        }
-
     }
 
-    public int generateRandomNumber(int min, int max){
-        return (int) ((Math.random() * (max - min)) + min);
+    public void updateTargets(){
+        if (this.enemiesCount != 0) {
+            generateEnemy();
+        }
+
+        if (this.keyboardAdapter.isFirePressed()) {
+            this.tank.fire();
+        }
+
+        this.tank.moveTo(this.keyboardAdapter.getDirection());
+
+        for (int i = 0; i < this.bullets.size(); i++) {
+            if (this.bullets.get(i).gameOver) {
+                this.bullets.remove(i);
+            }
+        }
+        for (int i = 0; i < this.enemies.size(); i++) {
+            if (this.enemies.get(i).gameOver) {
+                this.score += this.enemies.get(i).getScore();
+                this.enemies.remove(i);
+            }
+        }
+        interactCharacters();
+        if(this.tank.gameOver){
+            this.parent.setScreen(new GameOverScreen(this.parent,this.score, false));
+        }
+        if(this.enemiesCount == 0 && this.enemies.size() == 0){
+            this.parent.setScreen(new GameOverScreen(this.parent,this.score, true));
+        }
     }
 
     private Time lastEnemyGenerateTime = new Time(0);
     public void generateEnemy(){
-        if(this.lastEnemyGenerateTime.getTime() + 7000 < System.currentTimeMillis()){
+        int ENEMY_SPAWN_TIMEOUT = 5000;
 
-            MAX_ENEMIES--;
-            int positionNumber = generateRandomNumber(1,4);
-            int typeNumber = generateRandomNumber(1,5);
+        if(this.lastEnemyGenerateTime.getTime() + ENEMY_SPAWN_TIMEOUT < System.currentTimeMillis()){
+            enemiesCount--;
+            int positionNumber = Utils.random(1,4);
+            int typeNumber = Utils.random(1,5);
 
             Enemy.TankType type;
             if(typeNumber == 4){
@@ -123,16 +133,13 @@ public class StageOneScreen extends ScreenBase {
                 type = Enemy.TankType.BASIC;
             }
 
-            Vector2 position = new Vector2(16F, 208F);
+            Vector2 position = new Vector2(enemiesPositions[0]);
 
-            if(positionNumber == 1){
-                position.set(16F, 208F);
-            }
             if(positionNumber == 2){
-                position.set(156F, 208F);
+                position.set(enemiesPositions[1]);
             }
             if(positionNumber == 3){
-                position.set(208F, 208F);
+                position.set(enemiesPositions[2]);
             }
 
             this.lastEnemyGenerateTime = new Time(System.currentTimeMillis());
@@ -142,33 +149,33 @@ public class StageOneScreen extends ScreenBase {
 
     public void interactCharacters(){
         for(Enemy enemy : this.enemies){
-
             if(enemy.isIntersected(this.base)){
                 this.base.explore();
                 this.tank.gameOver = true;
             }
+        }
 
-            for(Bullet bullet : this.bullets){
-                if(enemy.isIntersected(bullet) && !bullet.isEnemy()){
+        for(int i =0; i < this.bullets.size();i++){
+            interactBullets(this.bullets.get(i),i);
+        }
+    }
+
+    public void interactBullets(Bullet bullet, int index){
+            for (Enemy enemy : this.enemies) {
+                if (enemy.isIntersected(bullet) && !bullet.isEnemy()) {
                     enemy.explore();
                     bullet.explore();
                 }
             }
-        }
-
-        for(Bullet bullet : this.bullets){
             if(bullet.isIntersected(this.tank) && bullet.isEnemy()){
                 this.tank.explore();
                 bullet.explore();
             }
-        }
 
-        for(int i = 0; i < this.bullets.size();i++){
-            for(int j = i+1 ; j< this.bullets.size();j++){
-                if(this.bullets.get(i).isIntersected(this.bullets.get(j))){
-                    this.bullets.get(i).explore();
+             for(int j = index+1 ; j< this.bullets.size();j++){
+                 if(this.bullets.get(index).isIntersected(this.bullets.get(j))){
+                    this.bullets.get(index).explore();
                     this.bullets.get(j).explore();
-                }
             }
         }
     }

@@ -14,5 +14,12 @@ public final class CONSTANTS {
     public static int[] UP_HALF_BRICK = new int[]{5,0};
     public static int[] DOWN_HALF_BRICK = new int[]{3,0};
     public static int[] EMPTY_BLOCK = new int[]{0,0};
+    public static int[] EXPLORE_TILE = new int[]{256,128};
+    public static int[] BULLET_TILE = new int[]{320,100};
+    public static int[] BASE_TILE = new int[]{304,32};
+    public static int[] BASE_LOSE_TILE = new int[]{336,32};
+    public static int[] BASIC_ENEMY_TILE = new int[]{128,0};
+    public static int[] FAST_ENEMY_TILE = new int[]{128,80};
+    public static int[] BASIC_TANK_TILE = new int[]{0,0};
 
 }
