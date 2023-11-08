@@ -1,7 +1,11 @@
-sourceCompatibility = 1.7
+sourceCompatibility = 1.8
 dependencies {
+    api "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
+    api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+    implementation 'junit:junit:4.13.1'
+    implementation group: 'org.mockito', name: 'mockito-core', version: '4.8.1'
+    implementation "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
 
-implementation 'junit:junit:4.13.1'
 }
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 

@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StageOneScreen extends ScreenBase {
-    private TiledMap map;
+    public TiledMap map;
     private OrthogonalTiledMapRenderer renderer;
     private MainCharacter tank;
     private List<Bullet> bullets;
@@ -56,6 +56,7 @@ public class StageOneScreen extends ScreenBase {
         this.enemies = new ArrayList<>();
         this.base = new Base(basePosition.x, basePosition.y, (TiledMapTileLayer) map.getLayers().get(0),CONSTANTS.TILE_SIZE,CONSTANTS.TILE_SIZE);
         this.text = new Stat("text",this.renderer.getBatch(),viewport);
+
     }
 
     @Override
