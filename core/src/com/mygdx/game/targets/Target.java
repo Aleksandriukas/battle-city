@@ -27,7 +27,7 @@ public class Target {
     protected Float speed = 1F;
     public final TiledMapTileLayer collisionLayer;
 
-    protected Target(Float x, Float y, TiledMapTileLayer collisionLayer,Integer tileSize, Integer modelSize, Vector2 texturePosition, int nextTileCoordinates){
+    public Target(Float x, Float y, TiledMapTileLayer collisionLayer, Integer tileSize, Integer modelSize, Vector2 texturePosition, int nextTileCoordinates){
 
         this.direction = Direction.UP;
         this.modelSize = modelSize;

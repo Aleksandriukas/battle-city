@@ -22,4 +22,6 @@ public final class CONSTANTS {
     public static int[] FAST_ENEMY_TILE = new int[]{128,80};
     public static int[] BASIC_TANK_TILE = new int[]{0,0};
 
+    public static int NEXT_TANK_TILE = 32;
+
 }

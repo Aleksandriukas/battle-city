@@ -21,7 +21,7 @@ public class Tank extends Target {
     private Integer timeout = 1000;
 
     Tank(Float x , Float y, TiledMapTileLayer collisionLayer ,List<Bullet> bullets, Boolean isEnemy, Vector2 texturePosition){
-        super(x,y,collisionLayer, CONSTANTS.TANK_TILE_SIZE, CONSTANTS.TANK_MODEL_SIZE, texturePosition, 32);
+        super(x,y,collisionLayer, CONSTANTS.TANK_TILE_SIZE, CONSTANTS.TANK_MODEL_SIZE, texturePosition, CONSTANTS.NEXT_TANK_TILE);
 
         this.bullets = bullets;
 
