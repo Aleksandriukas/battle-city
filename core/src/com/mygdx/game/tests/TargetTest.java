@@ -33,6 +33,7 @@ public class TargetTest{
         Gdx.gl = Gdx.gl20;
 
         TmxMapLoader loader = new TmxMapLoader();
+        // FIXME fix assets location
         map = loader.load(Gdx.files.internal("stage1.tmx").file().getAbsolutePath());
         target = new Target(16F,16F, (TiledMapTileLayer) map.getLayers().get(0), 12, 12, new Vector2(0,0), 0); // BOTTOM LEFT CORNER
     }
